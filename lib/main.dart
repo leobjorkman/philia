@@ -4,6 +4,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 
+const LIGHT_GREY = Color(0xDDFFFFFF);
+
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -45,13 +48,24 @@ class MyHomePage extends StatefulWidget {
   "https://cdn-images-1.medium.com/max/1600/1*H-WYYsGMF4Wu6R0iPzORGg.png",
   "https://static01.nyt.com/images/2017/09/24/arts/24movie-posters1/24movie-posters1-jumbo.jpg",
 ];*/
-var data = [
+/*var data = [
   "assets/images/light.jpg",
   "assets/images/b1.jpg",
   "assets/images/b2.jpg",
   "assets/images/b3.jpg",
   "assets/images/caballo.jpg",
   "assets/images/dark.jpg",
+];*/
+var data = [
+  "What should be the goal of humanity?",
+  "What is effective altruism?",
+  "Is free will real or just an illusion?",
+  "Where is the line between art and not art?",
+  "What does it mean to live a good life?",
+  "Another question to test something",
+  "The third one's going here"
+];
+var colors = [0xFFf72585,0xFFD61E92,0xFFb5179e,0xFF9410AB,0xFF7209b7,0xFF560bad,0xFF480ca8,0xFF3a0ca3,0xFF3f37c9,0xFF4361ee,0xFF4895ef,0xFF4cc9f0
 ];
 
 var MOVIE_POSTER_ASPECT_RATIO =
@@ -86,14 +100,23 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: GradientAppBar(
             title: Text('Philia', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30),),
-            gradient: LinearGradient(colors: [Color(0xFF3366FF), Color(0xFF00CCFF)]),
+            gradient: LinearGradient(colors: [Color(0xFF3366FF), Color(0xFF0DB3FF)]),
             centerTitle: true,
 
         ),
         backgroundColor: new Color(0xFF736AB7),
         body: SafeArea(
-          child: LimitedBox(
-            maxWidth: 600,
+          child: Container(
+            decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF736AB7),
+                    Color(0xFF3366FF),
+                    Color(0xFF736AB7),
+                  ],
+                )),
             child: ListView(
 
               //crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -117,23 +140,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       ]
                       ),
-                      Positioned(top: 0, right: 5,child:
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xEF8880C2),
-                            shape: BoxShape.circle,
-                            boxShadow: [BoxShadow(spreadRadius: 0.0,blurRadius: 1.5, color: Colors.black,offset: Offset(1.5,2))],
-                          ),
-                          height: 80,
-                          width: 80,
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Generic",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22,fontStyle: FontStyle.italic, color: Colors.white),
-                          )
-                        ),
-                      ),
 
                     ]),
                 ),
@@ -155,10 +161,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
                         ]
                         ),
-                        Positioned(top: 0, right: 5,child:
+                        /*Positioned(bottom: 0, right: 5,child:
                         Container(
                             decoration: BoxDecoration(
-                              color: Color(0xEF8880C2),
+                              color: Color(0xFF208DFF),
                               shape: BoxShape.circle,
                               boxShadow: [BoxShadow(spreadRadius: 0.0,blurRadius: 1.5, color: Colors.black,offset: Offset(1.5,2))],
                             ),
@@ -171,7 +177,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22,fontStyle: FontStyle.italic, color: Colors.white),
                             )
                         ),
-                        ),
+                        ),*/
+
 
                       ]),
                 ),
@@ -193,10 +200,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
                         ]
                         ),
-                        Positioned(top: 0, right: 5,child:
+                        /*Positioned(top: 0, right: 5,child:
                         Container(
                             decoration: BoxDecoration(
-                              color: Color(0xEF8880C2),
+                              color: Color(0xFF208DFF),
                               shape: BoxShape.circle,
                               boxShadow: [BoxShadow(spreadRadius: 0.0,blurRadius: 1.5, color: Colors.black,offset: Offset(1.5,2))],
                             ),
@@ -209,7 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22,fontStyle: FontStyle.italic, color: Colors.white),
                             )
                         ),
-                        ),
+                        ),*/
 
                       ]),
                 )
@@ -312,38 +319,67 @@ class PosterScrollWidget extends StatelessWidget {
                 onTap: () {
                   Scaffold.of(context).showSnackBar(SnackBar(content: Text('You clicked $url')));
                 },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    //Items in the stack behind the primary poster should fade into the background
-                    //a naive solution would just use opacity, however, that would result in each poster
-                    //fading through to the poster behind them. We don't want that, so we give
-                    //each poster a white background, which matches the widget background. If this were overtop of black,
-                    //or some other color, we'd probably want to use that color instead.
-                    //However, we *do* want the top-most poster to fade through to the posters behind it as its being
-                    //swiped off the top of the stack, so if it's to the "right", we give it no such white background
-                    decoration: deltaFromCurrentPage < 0
-                        ? BoxDecoration(color: Colors.white)
-                        : BoxDecoration(),
-                    child: Opacity(
-                      opacity: opacity,
-                      child: AspectRatio(
-                        aspectRatio: MOVIE_POSTER_ASPECT_RATIO,
-                        //This demo doesn't do the hero animation, but flutter makes that super easy.
-                        //just wrap this in a Hero widget, give it the movie id as your key, then in the detail
-                        //wrap an image in that same key, and it'll just work. Check out my trip demo for an example
-                        child: Container(
-                          height: heightOfPrimaryPoster,
-                          width: widthOfPrimaryPoster,
-                          color: Colors.pinkAccent,
-                          alignment: Alignment.center,
-                          child: Text(url, textAlign: TextAlign.center, style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 26
-
-                          ),)
-                        ),
+                child: Container(
+                  //Items in the stack behind the primary poster should fade into the background
+                  //a naive solution would just use opacity, however, that would result in each poster
+                  //fading through to the poster behind them. We don't want that, so we give
+                  //each poster a white background, which matches the widget background. If this were overtop of black,
+                  //or some other color, we'd probably want to use that color instead.
+                  //However, we *do* want the top-most poster to fade through to the posters behind it as its being
+                  //swiped off the top of the stack, so if it's to the "right", we give it no such white background
+                  decoration: deltaFromCurrentPage < 0
+                      ? BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10))
+                      : BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                  child: Opacity(
+                    opacity: opacity,
+                    child: AspectRatio(
+                      aspectRatio: MOVIE_POSTER_ASPECT_RATIO,
+                      //This demo doesn't do the hero animation, but flutter makes that super easy.
+                      //just wrap this in a Hero widget, give it the movie id as your key, then in the detail
+                      //wrap an image in that same key, and it'll just work. Check out my trip demo for an example
+                      child: Container(
+                        height: heightOfPrimaryPoster,
+                        width: widthOfPrimaryPoster,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [BoxShadow(spreadRadius: 0.0,blurRadius: 5.5, color: Colors.black,offset: Offset(2,3))],
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              stops: [0.1, 0.5, 0.7, 0.9],
+                              colors: [
+                                Color(colors[i]),
+                                Color(colors[(i+1)%(colors.length-1)]),
+                                Color(colors[(i+3)%(colors.length-1)]),
+                                Color(colors[(i+4)%(colors.length-1)]),
+                              ],
+                            ),
+                          ),
+                        alignment: Alignment.center,
+                        child: Wrap(
+                          children: [Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Cathegory",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22,fontStyle: FontStyle.italic, color: LIGHT_GREY),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Text(url, textAlign: TextAlign.center, style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 26
+                                ),),
+                              ),
+                              SizedBox(height: 22,),
+                            ],
+                          )],
+                        )
                       ),
                     ),
                   ),
