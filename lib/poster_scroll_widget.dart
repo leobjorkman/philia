@@ -97,7 +97,7 @@ class PosterScrollWidget extends StatelessWidget {
               textDirection: TextDirection.ltr,
               child: GestureDetector(
                 onTap: () {
-                  Scaffold.of(context).showSnackBar(SnackBar(content: Text('You clicked $question')));
+                  //Scaffold.of(context).showSnackBar(SnackBar(content: Text('You clicked $question')));
                   Navigator.pushNamed(context, '/qcard',
                     arguments: Question(index: i, cat: cat),
                   );
