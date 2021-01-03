@@ -1,13 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:philia/my_gradient_app_bar.dart';
 import 'package:philia/question.dart';
+//import 'package:just_audio/just_audio.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+//import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+
 
 import 'constants.dart';
 import 'db.dart';
+class QCard extends StatefulWidget {
 
-class QCard extends StatelessWidget{
+
+  QCardState createState() => new QCardState();
+
+}
+
+
+
+class QCardState extends State<QCard>{
+  PlayerState _playerState;
+  YoutubeMetaData _videoMetaData;
+  double _volume = 100;
+  bool _muted = false;
+  bool _isPlayerReady = false;
+
+  YoutubePlayerController _controller = YoutubePlayerController(
+    initialVideoId: 'iLnmTe5Q2Qw',
+    flags: YoutubePlayerFlags(
+      autoPlay: false,
+      mute: false,
+    ),
+  );
+
+  void listener() {
+    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+      setState(() {
+        _playerState = _controller.value.playerState;
+        _videoMetaData = _controller.metadata;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Question args = ModalRoute.of(context).settings.arguments;
@@ -16,6 +50,8 @@ class QCard extends StatelessWidget{
 
     //final player = AudioPlayer();
     //var duration = await player.setUrl('https://foo.com/bar.mp3');
+
+
 
     return Scaffold(
         appBar: myGradientAppBar(),
@@ -75,13 +111,25 @@ class QCard extends StatelessWidget{
           ),
         ),
         Container(
-          height: 200,
+          height: 40,
           width: 400,
           child: Text("hola"),
-        )
+        ),
+        YoutubePlayer(
+          controller: _controller,
+          progressIndicatorColor: Colors.amber,
+          showVideoProgressIndicator: true,
+          /*progressColors: ProgressColors(
+            playedColor: Colors.amber,
+            handleColor: Colors.amberAccent,
+          ),*/
+          onReady: () {
+        _controller.addListener(listener);
+        },
+        ),
       ],
       )
     );
   }
-  
+
 } 
