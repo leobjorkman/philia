@@ -10,16 +10,16 @@ import 'package:just_audio/just_audio.dart';
 //import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class QCard extends StatefulWidget {
+/*class QCard extends StatefulWidget {
 
 
   QCardState createState() => new QCardState();
 
-}
+}*/
 
 
 
-class QCardState extends State<QCard>{
+class QCard extends StatelessWidget{  //State extends State<QCard>{
   PlayerState _playerState;
   /*YoutubeMetaData _videoMetaData;
   double _volume = 100;
@@ -130,6 +130,7 @@ class QCardState extends State<QCard>{
             ),
           ),
         ),
+        new AudioWidget(),
         webStack(_launchURL),
         videoStack(_launchURL),
         /*YoutubePlayerIFrame(
@@ -148,6 +149,38 @@ class QCardState extends State<QCard>{
       throw 'Could not launch $url';
     }
   }
+}
+
+class AudioWidget extends StatefulWidget{
+
+  AudioWidgetState createState() => new AudioWidgetState();
+
+}
+class AudioWidgetState extends State<AudioWidget>{
+  final player = AudioPlayer();
+
+  _init() async {
+    var duration = await player.setUrl('https://hwcdn.libsyn.com/p/f/1/7/f171b8f784da23d2/mcluhan_01.mp3?c_id=92698007&cs_id=92698007&destination_id=144660&expiration=1610164778&hwt=4b1eab2c5c095b8435b92731b2cbb7ca');
+    //player.play(); // Usually you don't want to wait for playback to finish.
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    _init();
+    return Container(
+      height: 100,
+        width: 100,
+        color: Colors.black,
+        child: Column(
+          children: [
+            RaisedButton(onPressed: player.play, child: Icon(CupertinoIcons.play_circle),),
+            RaisedButton(onPressed: player.pause, child: Icon(CupertinoIcons.pause_circle))
+
+    ],
+        ));
+  }
+
 }
 
 Widget webStack(_launchURL){
