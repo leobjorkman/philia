@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:philia/my_gradient_app_bar.dart';
 import 'package:philia/question.dart';
 import 'package:philia/summary.dart';
-//import 'package:just_audio/just_audio.dart';
-//import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'constants.dart';
 import 'db.dart';
+import 'package:just_audio/just_audio.dart';
+//import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+//import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QCard extends StatefulWidget {
 
@@ -20,7 +21,7 @@ class QCard extends StatefulWidget {
 
 class QCardState extends State<QCard>{
   PlayerState _playerState;
-  YoutubeMetaData _videoMetaData;
+  /*YoutubeMetaData _videoMetaData;
   double _volume = 100;
   bool _muted = false;
   bool _isPlayerReady = false;
@@ -35,20 +36,12 @@ class QCardState extends State<QCard>{
       desktopMode: false,
       autoPlay: false,
     ),
-  );
+  );*/
 
-  /*void listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
-      });
-    }
-  }*/
 
   @override
   Widget build(BuildContext context) {
-    _controller.onEnterFullscreen = (){print("hey");};
+    //_controller.onEnterFullscreen = (){print("hey");};
     final Question args = ModalRoute.of(context).settings.arguments;
     int i = args.index;
     String cat = args.cat;
@@ -60,7 +53,7 @@ class QCardState extends State<QCard>{
 
     return Scaffold(
         appBar: myGradientAppBar(),
-      body: Column(children: [
+      body: ListView(children: [
         Hero(
           tag: 'questioncard' + cat + i.toString(),
           child: Material(
@@ -137,18 +130,108 @@ class QCardState extends State<QCard>{
             ),
           ),
         ),
-        Container(
-          height: 40,
-          width: 400,
-          child: Text("hola"),
-        ),
-        YoutubePlayerIFrame(
+        webStack(_launchURL),
+        videoStack(_launchURL),
+        /*YoutubePlayerIFrame(
           controller: _controller,
           aspectRatio: 16 / 9,
-        ),
+        ),*/
       ],
       )
     );
   }
+  _launchURL() async {
+    const url = 'https://flutter.dev';
+    if (await canLaunch(url)) {
+      await launch(url,forceWebView: false,enableJavaScript: true);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+}
 
-} 
+Widget webStack(_launchURL){
+  return InkWell(
+    onTap: _launchURL,
+    child: Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 60, left: 30,right:30),
+          child: Container(
+            padding: const EdgeInsets.all(30),
+            decoration: BoxDecoration(
+              color: BACKGROUND_DARK_BLUE,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [BoxShadow(color: Colors.grey,
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(1, 3))],
+            ),
+            height: 200,
+            width: 400,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 40),
+              child: Center(
+                child: Text("This is a text exsplaing why this article is great an"
+                  "all of those things, hope it helps a bit",
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 300,
+          top: 30,
+          child:Image(
+            alignment: Alignment.topRight,height: 120,image: AssetImage('assets/images/browser.png'))
+        )
+      ],
+    ),
+  );
+}
+
+Widget videoStack(_launchURL){
+  return InkWell(
+    onTap: _launchURL,
+    child: Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 60, left: 30,right:30),
+          child: Container(
+            padding: const EdgeInsets.all(30),
+            decoration: BoxDecoration(
+              color: DARK_RED,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [BoxShadow(color: Colors.grey,
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(1, 3))],
+            ),
+            height: 200,
+            width: 400,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 40),
+              child: Center(
+                child: Text("This is a text exsplaing why this video is great canal for learning"
+                    "all of those things, hope it helps a bit",
+                  style: TextStyle(
+                      color: Colors.white
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+            left: 280,
+            top: 30,
+            child:Image(
+                alignment: Alignment.topRight,height: 120,image: AssetImage('assets/images/video.png'))
+        )
+      ],
+    ),
+  );
+}

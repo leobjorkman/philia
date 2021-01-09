@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 
 const LIGHT_GREY = Color(0xDDFFFFFF);
 const BACKGROUND_TOP_PURPLE = Color(0xFF736AB7);
-const BACKGROUND_MID_PURPLE = Color(0xFF3366FF);
+const BACKGROUND_DARK_BLUE = Color(0xFF3366FF);
 const BACKGROUND_PURPLE_GREY = Color(0xFFE3D8F3);
-const APP_BAR_LIGHT_BLUE = Color(0x800DB3FF);
-const APP_BAR_DARK_BLUE = Color(0x803366FF);
+const APP_BAR_OPACITY_LIGHT_BLUE = Color(0x800DB3FF);
+const APP_BAR_OPACITY_PURPLE = Color(0x803366FF);
+const DARK_RED = Color(0xFFc21b1b);
 const WHITE = Colors.white;
 
 
